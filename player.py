@@ -3,7 +3,7 @@ import pygame
 # creates a player object i.e. a rectangular paddle
 class Player():
     def __init__(self):
-        self.WIDTH = 5 #paddle width
+        self.WIDTH = 10 #paddle width
         self.HEIGHT = 100 #paddle height
         self.SPEED = 10 #how fast paddle can move
         # will change once placed on left or right half of playing field
