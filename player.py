@@ -1,4 +1,5 @@
 import constants
+import pygame
 # creates a player object i.e. a rectangular paddle
 class Player():
     def __init__(self):
@@ -20,3 +21,29 @@ class Player():
     # gets the top left coordinate of the rectangle
     def getPlayerPos(self):
         return self.left,self.top
+
+    # update the position of the player given key input
+    # takes boolean input leftSide, which determines player
+    # position on screen as well as player controls
+    def updatePlayerGivenKeypress(self, leftSide):
+        left,top = self.getPlayerPos()
+        keys = pygame.key.get_pressed()
+        # for the left side player
+        if leftSide:
+            if keys[pygame.K_w]:
+                top = max(0,top-self.SPEED)
+            elif keys[pygame.K_s]:
+                top = min(top + self.SPEED, constants.SCREEN_HEIGHT - self.HEIGHT)
+        # for the right side player
+        else:
+            if keys[pygame.K_UP]:
+                top = max(0,top-self.SPEED)
+            elif keys[pygame.K_DOWN]:
+                top = min(top + self.SPEED, constants.SCREEN_HEIGHT - self.HEIGHT)
+        self.setPlayerPos(left,top)
+
+    # updates the screen rendering of the player
+    # pong.py will call the pygame update display method once to reduce computation
+    def render(self, screen):
+        left, top = self.getPlayerPos()
+        pygame.draw.rect(screen, (255, 255, 255), (left, top, self.WIDTH, self.HEIGHT))

@@ -1,4 +1,5 @@
 import constants
+import pygame
 # class for the pong ball
 class Ball():
     # creates a ball that starts in the middle of screen
@@ -18,3 +19,9 @@ class Ball():
     # get the (x,y) position of the ball
     def getBallPos(self):
         return self.x, self.y
+
+    # updates the screen rendering of the ball
+    # pong.py will call the pygame update display method once to reduce computation
+    def render(self, screen):
+        x,y = self.getBallPos()
+        pygame.draw.circle(screen, (255, 255, 255), (x, y), self.RADIUS)
