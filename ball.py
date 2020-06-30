@@ -22,7 +22,7 @@ class Ball():
     # if random number is 0, set it to something else
     def getRandSpeed(self):
         num = int(random.uniform(-4,4))
-        while(num==0):
+        while(-1<=num and num<=1):
             num = int(random.uniform(-4,4))
         return num
 
