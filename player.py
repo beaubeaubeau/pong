@@ -10,6 +10,7 @@ class Player():
         # specifies top left coordinate of the rectangle
         self.left = -100 #can have a value of 0 or constants.SCREEN_WIDTH-self.WIDTH
         self.top = -100
+        self.score = 0
 
     # sets the location of the rectangular paddles
     def setPlayerPos(self,left,top):
@@ -21,6 +22,15 @@ class Player():
     # gets the top left coordinate of the rectangle
     def getPlayerPos(self):
         return self.left,self.top
+
+    # sets players score
+    def setScore(self,score):
+        assert score >= 0
+        self.score = score
+
+    # get the player score
+    def getScore(self):
+        return self.score
 
     # update the position of the player given key input
     # takes boolean input leftSide, which determines player

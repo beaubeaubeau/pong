@@ -7,15 +7,24 @@ class Ball():
     def __init__(self):
         self.x = int(constants.SCREEN_WIDTH/2)
         self.y = int(constants.SCREEN_HEIGHT/2)
-        #if random number is 0, set it to something else
-        self.DX = int(random.uniform(-4,4))
-        if(self.DX==0):
-            self.DX = 2
-        self.DY = int(random.uniform(-4,4))
-        if(self.DY == 0):
-            self.DY = -2
+        self.DX = self.getRandSpeed()
+        self.DY = self.getRandSpeed()
         self.RADIUS = 5
-        self.score = 0
+
+    #resets all properties of the ball
+    def reset(self):
+        self.x = int(constants.SCREEN_WIDTH/2)
+        self.y = int(constants.SCREEN_HEIGHT/2)
+        self.DX = self.getRandSpeed()
+        self.DY = self.getRandSpeed()
+
+    # get a random velocity
+    # if random number is 0, set it to something else
+    def getRandSpeed(self):
+        num = int(random.uniform(-4,4))
+        while(num==0):
+            num = int(random.uniform(-4,4))
+        return num
 
     # set (x,y) position of the ball
     def setBallPos(self,x,y):
@@ -33,19 +42,3 @@ class Ball():
     def render(self, screen):
         x,y = self.getBallPos()
         pygame.draw.circle(screen, (255, 255, 255), (x, y), self.RADIUS)
-
-
-
-    # # checks for key press and moves ball
-    # def updateBallGivenKeypress(ball):
-    #     x,y = ball.getBallPos()
-    #     keys = pygame.key.get_pressed()
-    #     if keys[pygame.K_UP]:
-    #         y = max(y - ball.SPEED, ball.RADIUS)
-    #     elif keys[pygame.K_DOWN]:
-    #         y = min(y + ball.SPEED, constants.SCREEN_HEIGHT - ball.RADIUS)
-    #     elif keys[pygame.K_RIGHT]:
-    #         x = min(x + ball.SPEED, constants.SCREEN_WIDTH - ball.RADIUS)
-    #     elif keys[pygame.K_LEFT]:
-    #         x = max(x - ball.SPEED, ball.RADIUS)
-    #     ball.setBallPos(x,y)

@@ -5,7 +5,7 @@ from player import Player
 from ball import Ball
 
 # gameState is one of several options:
-# start, play, p1Score, p2Score, p1Win, p2Win
+# start, play, score, win
 global gameState
 gameState = "start"
 
@@ -41,6 +41,24 @@ def move(ball, player):
     y = y + ball.DY
     ball.setBallPos(x,y)
 
+# checks if a player has scored
+def checkForGoal(ball,p1,p2):
+    x,y = ball.getBallPos()
+    left = x-ball.RADIUS
+    right = x+ball.RADIUS
+    #player 1 on the left has been scored on
+    if(left < 0):
+        p2Score = p2.getScore()
+        p2.setScore(p2Score+1)
+        return True
+    #player 2 on the right has been scored on
+    if(right > constants.SCREEN_WIDTH):
+        p1Score = p1.getScore()
+        p1.setScore(p1Score+1)
+        return True
+    return False
+
+
 # Updates the display on the screen
 def updateScreen(screen, ball, p1, p2):
     # Fill the background with black
@@ -53,6 +71,25 @@ def updateScreen(screen, ball, p1, p2):
     if(gameState=="start"):
         text = font.render("Press Enter to Start", 1, (255,255,255))
         screen.blit(text,(constants.SCREEN_WIDTH/2 - 180, 50))
+    elif(gameState=="score"):
+        p1Score = p1.getScore()
+        p2Score = p2.getScore()
+        text = font.render("Player 1: "+str(p1Score)+"     Player 2: "\
+            +str(p2Score), 1, (255,255,255))
+        screen.blit(text,(constants.SCREEN_WIDTH/2 - 220, 50))
+        text = font.render("Press Space to Cont.", 1, (255,255,255))
+        screen.blit(text,(constants.SCREEN_WIDTH/2 - 200, constants.SCREEN_HEIGHT-200))
+    elif(gameState =="win"):
+        winner = "Player 1"
+        if(p2.getScore()==constants.POINTS_TO_WIN):
+            winner = "Player 2"
+        text = font.render("Player 1: "+str(p1.getScore())+"     Player 2: "\
+            +str(p2.getScore()), 1, (255,255,255))
+        screen.blit(text,(constants.SCREEN_WIDTH/2 - 220, 50))
+        text = font.render(winner + " wins!", 1, (255,255,255))
+        screen.blit(text,(constants.SCREEN_WIDTH/2 - 140, 200))
+        text = font.render("Press Enter to Restart", 1, (255,255,255))
+        screen.blit(text,(constants.SCREEN_WIDTH/2 - 200, constants.SCREEN_HEIGHT-200))
     pygame.display.update()
 
 
@@ -79,6 +116,9 @@ while running:
     keys = pygame.key.get_pressed()
     if(gameState=="start" and keys[pygame.K_RETURN]):
         gameState = "play"
+        p1.setScore(0)
+        p2.setScore(0)
+        ball.reset()
 
     #check for a key press and move players as necessary
     if(gameState == "play"):
@@ -86,6 +126,29 @@ while running:
         p2.updatePlayerGivenKeypress(False)
         move(ball,p1)
         move(ball,p2)
+        scored = checkForGoal(ball,p1,p2)
+        if(scored==True):
+            gameState = "score"
+
+    #update scoreboard for user and wait for next point to start
+    if(gameState == "score"):
+        # check to see if someone has won
+        if(p1.getScore()==constants.POINTS_TO_WIN  or\
+            p2.getScore()==constants.POINTS_TO_WIN):
+            gameState = "win"
+
+        # go to next point if space is pressed
+        keys = pygame.key.get_pressed()
+        if(gameState=="score" and keys[pygame.K_SPACE]):
+            gameState = "play"
+            # reset ball position and sets new random speed and direction
+            ball.reset()
+
+    # someone has won the game
+    if(gameState == "win"):
+        keys = pygame.key.get_pressed()
+        if(keys[pygame.K_RETURN]):
+            gameState = "start"
     # Update the screen display
     updateScreen(screen, ball, p1, p2)
 
