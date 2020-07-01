@@ -15,7 +15,7 @@ def setup():
     # Set up and return the drawing window
     return pygame.display.set_mode([constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT])
 
-# starts the ball moving on the screen
+# starts the ball moving on the screen and handles collisions
 def move(ball, player):
     x, y = ball.getBallPos()
     # first bound the y direction
@@ -58,6 +58,29 @@ def checkForGoal(ball,p1,p2):
         return True
     return False
 
+def displayStartScreen(screen):
+    text = font.render("Press Enter to Start", 1, (255,255,255))
+    screen.blit(text,(constants.SCREEN_WIDTH/2 - 180, 50))
+
+def displayScoreScreen(screen, p1Score, p2Score):
+    text = font.render("Player 1: "+str(p1Score)+"     Player 2: "\
+        +str(p2Score), 1, (255,255,255))
+    screen.blit(text,(constants.SCREEN_WIDTH/2 - 220, 50))
+    text = font.render("Press Space to Cont.", 1, (255,255,255))
+    screen.blit(text,(constants.SCREEN_WIDTH/2 - 200, constants.SCREEN_HEIGHT-200))
+
+def displayWinnerScreen(screen, p1, p2):
+    winner = "Player 1"
+    if(p2.getScore()==constants.POINTS_TO_WIN):
+        winner = "Player 2"
+    text = font.render("Player 1: "+str(p1.getScore())+"     Player 2: "\
+        +str(p2.getScore()), 1, (255,255,255))
+    screen.blit(text,(constants.SCREEN_WIDTH/2 - 220, 50))
+    text = font.render(winner + " wins!", 1, (255,255,255))
+    screen.blit(text,(constants.SCREEN_WIDTH/2 - 140, 200))
+    text = font.render("Press Enter to Restart", 1, (255,255,255))
+    screen.blit(text,(constants.SCREEN_WIDTH/2 - 200, constants.SCREEN_HEIGHT-200))
+
 
 # Updates the display on the screen
 def updateScreen(screen, ball, p1, p2):
@@ -69,27 +92,13 @@ def updateScreen(screen, ball, p1, p2):
     p2.render(screen)
     # display start screen instructions
     if(gameState=="start"):
-        text = font.render("Press Enter to Start", 1, (255,255,255))
-        screen.blit(text,(constants.SCREEN_WIDTH/2 - 180, 50))
+        displayStartScreen(screen)
     elif(gameState=="score"):
         p1Score = p1.getScore()
         p2Score = p2.getScore()
-        text = font.render("Player 1: "+str(p1Score)+"     Player 2: "\
-            +str(p2Score), 1, (255,255,255))
-        screen.blit(text,(constants.SCREEN_WIDTH/2 - 220, 50))
-        text = font.render("Press Space to Cont.", 1, (255,255,255))
-        screen.blit(text,(constants.SCREEN_WIDTH/2 - 200, constants.SCREEN_HEIGHT-200))
+        displayScoreScreen(screen, p1Score, p2Score)
     elif(gameState =="win"):
-        winner = "Player 1"
-        if(p2.getScore()==constants.POINTS_TO_WIN):
-            winner = "Player 2"
-        text = font.render("Player 1: "+str(p1.getScore())+"     Player 2: "\
-            +str(p2.getScore()), 1, (255,255,255))
-        screen.blit(text,(constants.SCREEN_WIDTH/2 - 220, 50))
-        text = font.render(winner + " wins!", 1, (255,255,255))
-        screen.blit(text,(constants.SCREEN_WIDTH/2 - 140, 200))
-        text = font.render("Press Enter to Restart", 1, (255,255,255))
-        screen.blit(text,(constants.SCREEN_WIDTH/2 - 200, constants.SCREEN_HEIGHT-200))
+        displayWinnerScreen(screen, p1, p2)
     pygame.display.update()
 
 
