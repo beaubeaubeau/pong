@@ -1,7 +1,14 @@
 # Pong
-Basic pong game written in Python using Pygame.
+Basic 2 player pong game written in Python using Pygame.
 
-## Instructions
+## Requirements
+For this to properly run, user needs to have Python and Pygame installed.
+Pygame can be installed with pip using the command
+```
+pip install pygame
+```
+
+## Game Instructions
 First player to score 4 points wins. Player 1 is on the left hand side of the
 screen while Player 2 is on the right hand side.
 
